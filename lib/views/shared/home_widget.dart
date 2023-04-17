@@ -119,6 +119,7 @@ class HomeWidget extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: NewShoes(
                               onTap: () {
+                                 productNotifier.shoesSizes = shoe.sizes;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(

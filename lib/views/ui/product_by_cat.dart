@@ -43,7 +43,6 @@ class _ProductByCatState extends State<ProductByCat>
      _tabController.animateTo(widget.tabIndex, curve: Curves.easeIn);
     getMale();
     getkids();
-   
     getFemale();
   }
 

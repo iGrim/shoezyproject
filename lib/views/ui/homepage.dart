@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:online_shop/models/constants.dart';
 import 'package:online_shop/models/sneaker_model.dart';
 import 'package:online_shop/services/helper.dart';
 import 'package:online_shop/views/shared/appstyle.dart';
@@ -14,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late final TabController _tabController =
       TabController(length: 3, vsync: this);
+  final _favBox = Hive.box('fav_box');
 
   late Future<List<Sneakers>> _male;
   late Future<List<Sneakers>> _female;
@@ -31,17 +34,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _kids = Helper().getKidsSneakers();
   }
 
+  getFavorites() {
+    final favData = _favBox.keys.map((key) {
+      final item = _favBox.get(key);
+      return {
+        "key": key,
+        "id": item['id'],
+      };
+    }).toList();
+
+    favorites = favData.toList();
+    ids = favorites.map((item) => item['id']).toList();
+    print(ids);
+  }
+
   @override
   void initState() {
     super.initState();
     getMale();
     getkids();
     getFemale();
+    getFavorites();
+    
   }
+
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: const Color(0xFFE2E2E2),
       body: SizedBox(

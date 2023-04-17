@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:hive/hive.dart';
 import 'package:online_shop/controllers/product_provider.dart';
+import 'package:online_shop/models/constants.dart';
 import 'package:online_shop/models/sneaker_model.dart';
 import 'package:online_shop/services/helper.dart';
 import 'package:online_shop/views/shared/appstyle.dart';
@@ -38,6 +39,27 @@ class _ProductPageState extends State<ProductPage> {
 
   Future<void> _createCart(Map<dynamic, dynamic> newCart) async {
     await _cartBox.add(newCart);
+  }
+
+  final _favBox = Hive.box('fav_box');
+
+  Future<void> _createFav(Map<dynamic, dynamic> addFav) async {
+    await _favBox.add(addFav);
+    getFavorites();
+  }
+
+  getFavorites() {
+    final favData = _favBox.keys.map((key) {
+      final item = _favBox.get(key);
+      return {
+        "key": key,
+        "id": item['id'],
+      };
+    }).toList();
+
+    favorites = favData.toList();
+    ids = favorites.map((item) => item['id']).toList();
+    setState(() {});
   }
 
   @override
@@ -133,10 +155,25 @@ class _ProductPageState extends State<ProductPage> {
                                                         .height *
                                                     0.1,
                                                 right: 20,
-                                                child: const Icon(
-                                                  AntDesign.hearto,
-                                                  color: Colors.grey,
-                                                )),
+                                                child: ids.contains(widget.id)
+                                                    ? const Icon(
+                                                        AntDesign.heart)
+                                                    : GestureDetector(
+                                                        onTap: () {
+                                                          _createFav({
+                                                            "id": sneaker.id,
+                                                            "name": sneaker.name,
+                                                            "category":
+                                                                sneaker.category,
+                                                            "imageUrl":
+                                                                sneaker.imageUrl[0],
+                                                            "price":
+                                                                sneaker.price,
+                                                          });
+                                                        },
+                                                        child: const Icon(
+                                                            AntDesign.hearto),
+                                                      )),
                                             Positioned(
                                                 bottom: 0,
                                                 right: 0,
@@ -382,9 +419,7 @@ class _ProductPageState extends State<ProductPage> {
                                                                       .add(sizes[
                                                                           'size']);
                                                                 }
-                                                                print(
-                                                                    productNotifier
-                                                                        .sizes);
+
                                                                 productNotifier
                                                                     .toggleCheck(
                                                                         index);
