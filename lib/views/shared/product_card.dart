@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:hive/hive.dart';
+import 'package:online_shop/controllers/favorites_provider.dart';
 import 'package:online_shop/models/constants.dart';
 import 'package:online_shop/views/shared/appstyle.dart';
 import 'package:online_shop/views/ui/favorites.dart';
+import 'package:provider/provider.dart';
 
 class ProductCard extends StatefulWidget {
   const ProductCard(
@@ -25,6 +27,7 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+ 
   final _favBox = Hive.box('fav_box');
 
   Future<void> _createFav(Map<dynamic, dynamic> addFav) async {
@@ -33,6 +36,7 @@ class _ProductCardState extends State<ProductCard> {
   }
 
   getFavorites() {
+    var favoritesNotifier = Provider.of<FavoritesNotifier>(context , listen: false);
     final favData = _favBox.keys.map((key) {
       final item = _favBox.get(key);
       return {
@@ -42,7 +46,7 @@ class _ProductCardState extends State<ProductCard> {
     }).toList();
 
     favorites = favData.toList();
-    ids = favorites.map((item) => item['id']).toList();
+    favoritesNotifier.ids = favorites.map((item) => item['id']).toList();
     setState(() {});
   }
 
@@ -78,13 +82,15 @@ class _ProductCardState extends State<ProductCard> {
                   Positioned(
                     right: 10,
                     top: 10,
-                    child: GestureDetector(
+                    child: Consumer<FavoritesNotifier>(
+                      builder: (context, favoritesNotifier, child) {
+                        return GestureDetector(
                       onTap: () async {
-                        if (ids.contains(widget.id)) {
+                        if (favoritesNotifier.ids.contains(widget.id)) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Favorites()));
+                                  builder: (context) => const Favorites()));
                         } else {
                           _createFav({
                             "id": widget.id,
@@ -94,11 +100,14 @@ class _ProductCardState extends State<ProductCard> {
                             "price": widget.price,
                           });
                         }
+                        setState(() {});
                       },
-                      child: ids.contains(widget.id)
+                      child: favoritesNotifier.ids.contains(widget.id)
                           ? const Icon(AntDesign.heart)
                           : const Icon(AntDesign.hearto),
-                    ),
+                    );
+                      },
+                    )
                   ),
                 ],
               ),

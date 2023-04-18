@@ -5,6 +5,7 @@ class ProductNotifier extends ChangeNotifier {
   List<dynamic> _shoeSizes = [];
   List<String> _sizes = [];
 
+
   int get activepage => _activepage;
 
   set activePage(int newIndex) {
