@@ -110,6 +110,7 @@ class _CartPageState extends State<CartPage> {
                                   Row(
                                     children: [
                                       Stack(
+                                        clipBehavior: Clip.none,
                                         children: [
                                           Padding(
                                             padding:
@@ -122,26 +123,30 @@ class _CartPageState extends State<CartPage> {
                                             ),
                                           ),
                                           Positioned(
-                                            bottom: 5,
-                                              child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                _deleteCart(data['key']);
-                                                Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                             MainScreen()));
-                                              },
-                                              child: const Icon(
-                                                AntDesign.delete,
-                                                size: 20,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ))
+                                            bottom: -2,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  _deleteCart(data['key']);
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                               MainScreen()));
+                                                },
+                                                child: Container(
+                                                  width: 40,
+                                                  height: 30,
+                                                  decoration: const BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius: BorderRadius.only(topRight: Radius.circular(12))
+                                                  ),
+                                                  child: const Icon(
+                                                    AntDesign.delete,
+                                                    size: 20,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ))
                                         ],
                                       ),
                                       Padding(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:hive/hive.dart';
 import 'package:online_shop/controllers/favorites_provider.dart';
-import 'package:online_shop/models/constants.dart';
 import 'package:online_shop/views/shared/appstyle.dart';
 import 'package:online_shop/views/ui/favorites.dart';
 import 'package:provider/provider.dart';
@@ -27,16 +26,16 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
- 
   final _favBox = Hive.box('fav_box');
 
-  Future<void> _createFav(Map<dynamic, dynamic> addFav) async {
+  Future<void> _createFav(Map<String, dynamic> addFav) async {
     await _favBox.add(addFav);
     getFavorites();
   }
 
-  getFavorites() {
-    var favoritesNotifier = Provider.of<FavoritesNotifier>(context , listen: false);
+getFavorites() {
+    var favoritesNotifier =
+        Provider.of<FavoritesNotifier>(context, listen: false);
     final favData = _favBox.keys.map((key) {
       final item = _favBox.get(key);
       return {
@@ -45,10 +44,11 @@ class _ProductCardState extends State<ProductCard> {
       };
     }).toList();
 
-    favorites = favData.toList();
-    favoritesNotifier.ids = favorites.map((item) => item['id']).toList();
-    setState(() {});
+    favoritesNotifier.favorites = favData.toList();
+    favoritesNotifier.ids = favoritesNotifier.favorites.map((item) => item['id']).toList();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,35 +80,34 @@ class _ProductCardState extends State<ProductCard> {
                             DecorationImage(image: NetworkImage(widget.image))),
                   ),
                   Positioned(
-                    right: 10,
-                    top: 10,
-                    child: Consumer<FavoritesNotifier>(
-                      builder: (context, favoritesNotifier, child) {
-                        return GestureDetector(
-                      onTap: () async {
-                        if (favoritesNotifier.ids.contains(widget.id)) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Favorites()));
-                        } else {
-                          _createFav({
-                            "id": widget.id,
-                            "name": widget.name,
-                            "category": widget.category,
-                            "imageUrl": widget.image,
-                            "price": widget.price,
-                          });
-                        }
-                        setState(() {});
-                      },
-                      child: favoritesNotifier.ids.contains(widget.id)
-                          ? const Icon(AntDesign.heart)
-                          : const Icon(AntDesign.hearto),
-                    );
-                      },
-                    )
-                  ),
+                      right: 10,
+                      top: 10,
+                      child: Consumer<FavoritesNotifier>(
+                        builder: (context, favoritesNotifier, child) {
+                          return GestureDetector(
+                            onTap: () async {
+                              if (favoritesNotifier.ids.contains(widget.id)) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Favorites()));
+                              } else {
+                                _createFav({
+                                  "id": widget.id,
+                                  "name": widget.name,
+                                  "category": widget.category,
+                                  "imageUrl": widget.image,
+                                  "price": widget.price,
+                                });
+                              }
+                            },
+                            child: favoritesNotifier.ids.contains(widget.id)
+                                ? const Icon(AntDesign.heart)
+                                : const Icon(AntDesign.hearto),
+                          );
+                        },
+                      )),
                 ],
               ),
               Padding(

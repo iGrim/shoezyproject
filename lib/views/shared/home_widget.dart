@@ -42,7 +42,9 @@ class HomeWidget extends StatelessWidget {
                           final shoe = snapshot.data![index];
                           return GestureDetector(
                             onTap: () {
+                              
                               productNotifier.shoesSizes = shoe.sizes;
+                              
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -119,7 +121,7 @@ class HomeWidget extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: NewShoes(
                               onTap: () {
-                                 productNotifier.shoesSizes = shoe.sizes;
+                                productNotifier.shoesSizes = shoe.sizes;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
