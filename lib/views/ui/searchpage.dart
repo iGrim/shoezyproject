@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:online_shop/views/shared/appstyle.dart';
+import 'package:shoezy/views/shared/appstyle.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -15,7 +15,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text("This is Search", style: appstyle(40, Colors.black, FontWeight.bold),),
+        child: Text("Still in progress.", style: appstyle(40, Colors.black, FontWeight.bold),),
       ),
     );
   }

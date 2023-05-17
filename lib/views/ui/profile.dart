@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:online_shop/views/shared/appstyle.dart';
+import 'package:shoezy/views/shared/appstyle.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,7 +14,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text("This is Profile", style: appstyle(40, Colors.black, FontWeight.bold),),
+        child: Text("Still in progress", style: appstyle(40, Colors.black, FontWeight.bold),),
       ),
     );;
   }

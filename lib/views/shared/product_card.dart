@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:hive/hive.dart';
-import 'package:online_shop/controllers/favorites_provider.dart';
-import 'package:online_shop/views/shared/appstyle.dart';
-import 'package:online_shop/views/ui/favorites.dart';
+import 'package:shoezy/controllers/favorites_provider.dart';
+import 'package:shoezy/views/shared/appstyle.dart';
+import 'package:shoezy/views/shared/reuseable_text.dart';
+import 'package:shoezy/views/ui/favorites.dart';
 import 'package:provider/provider.dart';
 
 class ProductCard extends StatefulWidget {
@@ -26,41 +27,20 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  final _favBox = Hive.box('fav_box');
-
-  Future<void> _createFav(Map<String, dynamic> addFav) async {
-    await _favBox.add(addFav);
-    getFavorites();
-  }
-
-getFavorites() {
-    var favoritesNotifier =
-        Provider.of<FavoritesNotifier>(context, listen: false);
-    final favData = _favBox.keys.map((key) {
-      final item = _favBox.get(key);
-      return {
-        "key": key,
-        "id": item['id'],
-      };
-    }).toList();
-
-    favoritesNotifier.favorites = favData.toList();
-    favoritesNotifier.ids = favoritesNotifier.favorites.map((item) => item['id']).toList();
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
+    var favoritesNotifier =
+        Provider.of<FavoritesNotifier>(context, listen: true);
+    favoritesNotifier.getFavorites();
     bool selected = true;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 20, 0),
+      padding: EdgeInsets.only(left: 8.w, right: 20.w),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width * 0.6,
+          height: 325.h,
+          width: 225.w,
           decoration: const BoxDecoration(boxShadow: [
             BoxShadow(
                 color: Colors.white,
@@ -74,54 +54,50 @@ getFavorites() {
               Stack(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.23,
+                    height: 186.h,
                     decoration: BoxDecoration(
                         image:
                             DecorationImage(image: NetworkImage(widget.image))),
                   ),
                   Positioned(
-                      right: 10,
-                      top: 10,
-                      child: Consumer<FavoritesNotifier>(
-                        builder: (context, favoritesNotifier, child) {
-                          return GestureDetector(
-                            onTap: () async {
-                              if (favoritesNotifier.ids.contains(widget.id)) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Favorites()));
-                              } else {
-                                _createFav({
-                                  "id": widget.id,
-                                  "name": widget.name,
-                                  "category": widget.category,
-                                  "imageUrl": widget.image,
-                                  "price": widget.price,
-                                });
-                              }
-                            },
-                            child: favoritesNotifier.ids.contains(widget.id)
-                                ? const Icon(AntDesign.heart)
-                                : const Icon(AntDesign.hearto),
-                          );
+                      right: 10.w,
+                      top: 10.h,
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (favoritesNotifier.ids.contains(widget.id)) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Favorites()));
+                          } else {
+                            favoritesNotifier.createFav({
+                              "id": widget.id,
+                              "name": widget.name,
+                              "category": widget.category,
+                              "price": widget.price,
+                              "imageUrl": widget.image
+                            });
+                          }
+                          setState(() {});
                         },
+                        child: favoritesNotifier.ids.contains(widget.id)
+                            ? const Icon(AntDesign.heart)
+                            : const Icon(AntDesign.hearto),
                       )),
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8),
+                padding: EdgeInsets.only(left: 8.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.name,
+                    reusableText(
+                      text: widget.name,
                       style: appstyleWithHt(
-                          36, Colors.black, FontWeight.bold, 1.1),
+                          34, Colors.black, FontWeight.bold, 1.1),
                     ),
-                    Text(
-                      widget.category,
+                    reusableText(
+                      text: widget.category,
                       style:
                           appstyleWithHt(18, Colors.grey, FontWeight.bold, 1.5),
                     )
@@ -129,22 +105,22 @@ getFavorites() {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
+                padding:  EdgeInsets.symmetric(horizontal: 8.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.price,
+                    reusableText(
+                      text:widget.price,
                       style: appstyle(30, Colors.black, FontWeight.w600),
                     ),
                     Row(
                       children: [
-                        Text(
-                          "Colors",
+                        reusableText(
+                          text: "Colors",
                           style: appstyle(18, Colors.grey, FontWeight.w500),
                         ),
-                        const SizedBox(
-                          width: 5,
+                        SizedBox(
+                          width: 5.w,
                         ),
                         ChoiceChip(
                           label: const Text(" "),

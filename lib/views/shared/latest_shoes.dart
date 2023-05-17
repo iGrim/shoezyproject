@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:online_shop/models/sneaker_model.dart';
-import 'package:online_shop/views/shared/stagger_tile.dart';
-import 'package:online_shop/views/ui/product_page.dart';
+import 'package:shoezy/models/sneaker_model.dart';
+import 'package:shoezy/views/shared/stagger_tile.dart';
+import 'package:shoezy/views/ui/product_page.dart';
 
 class latestShoes extends StatelessWidget {
   const latestShoes({
@@ -26,15 +27,15 @@ class latestShoes extends StatelessWidget {
             return StaggeredGridView.countBuilder(
                 padding: EdgeInsets.zero,
                 crossAxisCount: 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 16,
+                crossAxisSpacing: 20.w,
+                mainAxisSpacing: 16.h,
                 itemCount: male!.length,
                 scrollDirection: Axis.vertical,
                 staggeredTileBuilder: (index) => StaggeredTile.extent(
                     (index % 2 == 0) ? 1 : 1,
                     (index % 4 == 1 || index % 4 == 3)
-                        ? MediaQuery.of(context).size.height * 0.35
-                        : MediaQuery.of(context).size.height * 0.305),
+                        ? 285.h
+                        : 252.h),
                 itemBuilder: (context, index) {
                   final shoe = snapshot.data![index];
                   return GestureDetector(

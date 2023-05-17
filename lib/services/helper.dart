@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart' as the_bundle;
-import 'package:online_shop/models/sneaker_model.dart';
+import 'package:shoezy/models/sneaker_model.dart';
 
 // this class fetches data from the json file and return it to the app
 class Helper {

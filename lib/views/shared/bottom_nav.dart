@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:online_shop/controllers/mainscreen_provider.dart';
-import 'package:online_shop/views/shared/bottom_nav_widget.dart';
+import 'package:shoezy/controllers/mainscreen_provider.dart';
+import 'package:shoezy/views/shared/bottom_nav_widget.dart';
 import 'package:provider/provider.dart';
 
 class BottoNavBar extends StatelessWidget {
@@ -20,7 +20,7 @@ class BottoNavBar extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.symmetric(horizontal: 10),
             decoration: const BoxDecoration(
-                color: Colors.black,
+                color: Colors.blueAccent,
                 borderRadius: BorderRadius.all(Radius.circular(16))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,7 +46,7 @@ class BottoNavBar extends StatelessWidget {
                     mainScreenNotifier.pageIndex = 2;
                   },
                   icon: mainScreenNotifier.pageIndex == 2
-                      ? Ionicons.heart
+                    ? Ionicons.heart
                       : Ionicons.heart_circle_outline,
                 ),
                 BotomNavWidget(

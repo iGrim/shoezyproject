@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:online_shop/views/shared/appstyle.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shoezy/views/shared/appstyle.dart';
 
 class CategoryBtn extends StatelessWidget {
   const CategoryBtn(
@@ -13,8 +14,8 @@ class CategoryBtn extends StatelessWidget {
     return MaterialButton(
       onPressed: onPress,
       child: Container(
-        height: 45,
-        width: MediaQuery.of(context).size.width * 0.255,
+        height: 45.h,
+        width: 96,
         decoration: BoxDecoration(
             border: Border.all(
               width: 1,
@@ -25,6 +26,10 @@ class CategoryBtn extends StatelessWidget {
         child: Center(
           child: Text(
             label,
+            maxLines: 1,
+            softWrap: false,
+            overflow: TextOverflow.fade,
+            textAlign: TextAlign.left,
             style: appstyle(20, buttonClr, FontWeight.w600),
           ),
         ),

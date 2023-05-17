@@ -1,55 +1,19 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:hive/hive.dart';
-import 'package:online_shop/controllers/cart_provider.dart';
-import 'package:online_shop/views/shared/appstyle.dart';
-import 'package:online_shop/views/shared/checkout_btn.dart';
-import 'package:online_shop/views/ui/mainscreen.dart';
-import 'package:provider/provider.dart';
+import 'package:shoezy/views/shared/export.dart';
+import 'package:shoezy/views/shared/export_packages.dart';
+
 
 class CartPage extends StatefulWidget {
-  CartPage({super.key});
+  const CartPage({super.key});
 
   @override
   State<CartPage> createState() => _CartPageState();
 }
 
 class _CartPageState extends State<CartPage> {
-  final _cartBox = Hive.box('cart_box');
-  List<dynamic> cart = [];
-
-  getCart() {
-    final cartData = _cartBox.keys.map((key) {
-      final item = _cartBox.get(key);
-      return {
-        "key": key,
-        "id": item['id'],
-        "category": item['category'],
-        "name": item['name'],
-        "imageUrl": item['imageUrl'],
-        "price": item['price'],
-        "qty": item['qty'],
-        "sizes": item['sizes']
-      };
-    }).toList();
-
-    cart = cartData.reversed.toList();
-  }
-
-  @override
-  void initState() {
-    getCart();
-    super.initState();
-  }
-
-  _deleteCart(int key) async {
-    await _cartBox.delete(key);
-  }
-
   @override
   Widget build(BuildContext context) {
     var cartProvider = Provider.of<CartProvider>(context);
+    cartProvider.getCart();
     return Scaffold(
       backgroundColor: const Color(0xFFE2E2E2),
       body: Padding(
@@ -59,8 +23,8 @@ class _CartPageState extends State<CartPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 40,
+                SizedBox(
+                  height: 40.h,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -71,29 +35,30 @@ class _CartPageState extends State<CartPage> {
                     color: Colors.black,
                   ),
                 ),
-                Text(
-                  "My Cart",
+                reusableText(
+                  text: "My Cart",
                   style: appstyle(36, Colors.black, FontWeight.bold),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.65,
+                  height: 20.h,
+                ),
+
+                SizedBox(
+                  height: 528.h,
                   child: ListView.builder(
-                      itemCount: cart.length,
+                      itemCount: cartProvider.cart.length,
                       padding: EdgeInsets.zero,
                       itemBuilder: (context, index) {
-                        final data = cart[index];
+                        final data = cartProvider.cart[index];
                         return Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: EdgeInsets.all(8.h),
                           child: ClipRRect(
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(12)),
+                                BorderRadius.all(Radius.circular(12.h)),
                             child: Container(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.11,
-                              width: MediaQuery.of(context).size.width,
+                              height: 95.h,
+                              width: 375.w,
                               decoration: BoxDecoration(
                                   color: Colors.grey.shade100,
                                   boxShadow: [
@@ -113,36 +78,39 @@ class _CartPageState extends State<CartPage> {
                                         clipBehavior: Clip.none,
                                         children: [
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.all(12),
+                                            padding: EdgeInsets.all(12.h),
                                             child: CachedNetworkImage(
                                               imageUrl: data['imageUrl'],
-                                              width: 70,
-                                              height: 70,
+                                              width: 70.w,
+                                              height: 70.h,
                                               fit: BoxFit.fill,
                                             ),
                                           ),
                                           Positioned(
-                                            bottom: -2,
+                                              bottom: -2.h,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  _deleteCart(data['key']);
+                                                  cartProvider
+                                                      .deleteCart(data['key']);
                                                   Navigator.pushReplacement(
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                               MainScreen()));
+                                                              MainScreen()));
                                                 },
                                                 child: Container(
-                                                  width: 40,
-                                                  height: 30,
-                                                  decoration: const BoxDecoration(
-                                                  color: Colors.black,
-                                                  borderRadius: BorderRadius.only(topRight: Radius.circular(12))
-                                                  ),
-                                                  child: const Icon(
+                                                  width: 40.h,
+                                                  height: 30.h,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.blueAccent,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      12.h))),
+                                                  child: Icon(
                                                     AntDesign.delete,
-                                                    size: 20,
+                                                    size: 20.h,
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -150,51 +118,48 @@ class _CartPageState extends State<CartPage> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 12, left: 20),
+                                        padding: EdgeInsets.only(
+                                            top: 12.h, left: 20.w),
                                         child: Column(
                                           // mainAxisAlignment:
                                           //     MainAxisAlignment.start,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              data['name'],
-                                              style: appstyle(
-                                                  16,
-                                                  Colors.black,
-                                                  FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              data['category'],
-                                              style: appstyle(
-                                                  14,
-                                                  Colors.grey,
+                                            reusableText(
+                                              text: data['name'],
+                                              style: appstyle(16, Colors.black,
                                                   FontWeight.w600),
                                             ),
-                                            const SizedBox(
-                                              height: 5,
+                                            SizedBox(
+                                              height: 5.h,
+                                            ),
+                                            reusableText(
+                                              text: data['category'],
+                                              style: appstyle(14, Colors.grey,
+                                                  FontWeight.w600),
+                                            ),
+                                            SizedBox(
+                                              height: 5.h,
                                             ),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text(
-                                                  "\$${data['price']}",
+                                                reusableText(
+                                                  text: "\$${data['price']}",
                                                   style: appstyle(
                                                       18,
                                                       Colors.black,
                                                       FontWeight.w600),
                                                 ),
                                                 SizedBox(
-                                                  width: 30,
+                                                  width: 30.w,
                                                 ),
-                                                Text(
-                                                  "Size   ${data['sizes']}",
+                                                reusableText(
+                                                  text:
+                                                      "Size   ${data['sizes']}",
                                                   style: appstyle(
                                                       18,
                                                       Colors.grey,
@@ -214,18 +179,15 @@ class _CartPageState extends State<CartPage> {
                                         child: Container(
                                           decoration: const BoxDecoration(
                                               color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.all(
-                                                      Radius.circular(16))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(16))),
                                           child: Column(
                                             mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               InkWell(
                                                   onTap: () {
-                                                    cartProvider
-                                                        .decrement();
+                                                    cartProvider.decrement();
                                                   },
                                                   child: const Icon(
                                                     AntDesign.minussquare,
@@ -234,8 +196,7 @@ class _CartPageState extends State<CartPage> {
                                                   )),
                                               Text(
                                                 // data['qty'].toString(),
-                                                cartProvider.counter
-                                                    .toString(),
+                                                cartProvider.counter.toString(),
                                                 style: appstyle(
                                                   16,
                                                   Colors.black,
@@ -244,13 +205,12 @@ class _CartPageState extends State<CartPage> {
                                               ),
                                               InkWell(
                                                   onTap: () {
-                                                    cartProvider
-                                                        .increment();
+                                                    cartProvider.increment();
                                                   },
                                                   child: const Icon(
                                                     AntDesign.plussquare,
                                                     size: 20,
-                                                    color: Colors.black,
+                                                    color: Colors.blueAccent,
                                                   )),
                                             ],
                                           ),
@@ -278,6 +238,4 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
-
-
 }

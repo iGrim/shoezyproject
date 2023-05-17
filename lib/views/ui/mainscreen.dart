@@ -1,12 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:online_shop/controllers/mainscreen_provider.dart';
-import 'package:online_shop/views/shared/bottom_nav.dart';
-import 'package:online_shop/views/ui/cartpage.dart';
-import 'package:online_shop/views/ui/favorites.dart';
-import 'package:online_shop/views/ui/homepage.dart';
-import 'package:online_shop/views/ui/profile.dart';
-import 'package:online_shop/views/ui/searchpage.dart';
-import 'package:provider/provider.dart';
+import 'package:shoezy/views/shared/export.dart';
+import 'package:shoezy/views/shared/export_packages.dart';
+
 
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
@@ -14,8 +8,8 @@ class MainScreen extends StatelessWidget {
   List<Widget> pageList =  [
     const HomePage(),
     const SearchPage(),
-    Favorites(),
-    CartPage(),
+    const Favorites(),
+    const CartPage(),
     const ProfilePage()
   ];
 
